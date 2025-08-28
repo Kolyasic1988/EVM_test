@@ -22,7 +22,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "module_func.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -90,7 +90,7 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-
+  
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -98,7 +98,7 @@ int main(void)
   MX_ADC1_Init();
   MX_CAN1_Init();
   /* USER CODE BEGIN 2 */
-
+  vInitUser();
   /* USER CODE END 2 */
 
   /* USER CODE BEGIN RTOS_MUTEX */
@@ -123,7 +123,7 @@ int main(void)
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
-  /* add threads, ... */
+  vInitUserTasks();
   /* USER CODE END RTOS_THREADS */
 
   /* Start scheduler */
@@ -316,13 +316,14 @@ static void MX_GPIO_Init(void)
 /* USER CODE END Header_StartDefaultTask */
 void StartDefaultTask(void const * argument)
 {
-  /* USER CODE BEGIN 5 */
+  (void) argument;
+
+  // использую свою vMainAppTask in module_os.c file !
+
+  /* USER CODE BEGIN StartDefaultTask */
   /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END 5 */
+  vTaskDelete(NULL);
+  /* USER CODE END StartDefaultTask */
 }
 
 /**
