@@ -7,15 +7,18 @@
 #define __module_func_H
 
 // Функции инициализации
-void vInitUser(void);
-void vInitUserTasks(void);
-void Init_MainAppTask(void);
+extern void vInitUser(void);
+extern void vInitUserTasks(void);
+extern void vInitMainAppTask(void);
+extern void vInitAdcTask(void);
 
 // Функции проверки параметров
-void vAdcCheckParameters(void);
-void vCheckTermistorTemp(void);
+extern void vAdcCheckParameters(void);
 
 // --- Таска главной задачи ---
-void vMainAppTask(void *pvArg);
+extern void vMainAppTask(void *pvArg);
+
+// --- Таска АЦП ---
+extern void vAdcTask(void *pvArg);
 
 #endif /*__ module_func_H */

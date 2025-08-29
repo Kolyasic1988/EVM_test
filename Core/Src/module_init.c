@@ -9,12 +9,13 @@
 #include "cmsis_os.h"
 #include "FreeRTOS.h"
 #include "task.h"
+
 /********************************************************************/
 /**
-  * @brief  Стартовая инициализация периферии и задач проекта.
+  * @brief  Инициализация главной задачи
   */
 
- void Init_MainAppTask(void)
+ void vInitMainAppTask(void)
 {
     xTaskCreateStatic(
         vMainAppTask,                 // Функция таски
@@ -35,6 +36,7 @@ void vInitUser(void)
 
 void vInitUserTasks(void)
 {
-    Init_MainAppTask();
+    vInitMainAppTask();
+    vInitAdcTask();
 }
 
