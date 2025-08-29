@@ -1,10 +1,11 @@
-/**
-  * @file module_termistor.c
-  * @brief Функции обработки данных с термисторов.
-  *
-  */
+/*
+ ====================================================================
+ = Description:                  Функции для работы с термисторами
+ = File name:                    module_termistor.c
+ ====================================================================
+ */
 #include "module_termistor.h"
-#include "module_func.h"
+#include "board_func.h"
 
 float temp_buf[ADC_CHANNELS_NUM];
 

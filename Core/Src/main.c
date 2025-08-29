@@ -22,7 +22,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "module_func.h"
+#include "board_func.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -318,7 +318,7 @@ void StartDefaultTask(void const * argument)
 {
   /* USER CODE BEGIN 5 */
   (void) argument;
-  // использую свою vMainAppTask in module_os.c file !
+  // использую свою vMainAppTask in board_os.c file !
   vTaskDelete(NULL);
   /* USER CODE END 5 */
 }

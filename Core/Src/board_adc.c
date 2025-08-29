@@ -1,15 +1,17 @@
-/**
-  * @file module_adc.c
-  * @brief Функции для работы с АЦП.
-  *
-  */
+/*
+ ====================================================================
+ = Description:                  Фунции для работы с АЦП.
+ = File name:                    board_adc.c 
+====================================================================
+ */
+
 #include "stm32f4xx_hal.h"
 #include "stm32f4xx_it.h"
 #include "FreeRTOS.h"
 #include "cmsis_os.h"
-#include "module_func.h"
-#include "module_var.h"
-#include "module_def.h"
+#include "board_func.h"
+#include "board_var.h"
+#include "board_def.h"
 #include "adc.h"
 #include "module_termistor.h"
 #include "queue.h"

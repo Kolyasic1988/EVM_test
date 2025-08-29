@@ -1,11 +1,12 @@
-/**
-  * @file module_init.c
-  * @brief ФУнкции инициализации периферии и задач проекта.
-  *
-  */
+/*
+ ====================================================================
+ = Description:                  Функции инициализации модулей
+ = File name:                    board_init.c
+ ====================================================================
+ */
 
-#include "module_func.h"
-#include "module_var.h"
+#include "board_func.h"
+#include "board_var.h"
 #include "cmsis_os.h"
 #include "FreeRTOS.h"
 #include "task.h"
