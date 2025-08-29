@@ -61,11 +61,6 @@ target_sources(stm32cubemx INTERFACE
     ../../Core/Src/sysmem.c
     ../../Core/Src/syscalls.c
     ../../startup_stm32f405xx.s
-    ../../Core/Src/module_init.c
-    ../../Core/Src/module_os.c
-    ../../Core/Src/module_var.c
-    ../../Core/Src/module_adc.c
-    ../../Core/Src/module_termistor.c
 )
 
 target_link_directories(stm32cubemx INTERFACE
