@@ -40,7 +40,7 @@ void vCalculateTermistorTemp(adc_data_t adc_data) {
   ntc_error_flag[0] = vCheckTermistorTemp(ntc_sensor_temp[0]);
   ntc_error_flag[1] = vCheckTermistorTemp(ntc_sensor_temp[1]);
   // теперь эти данные надо передать в CAN
-  // Дано выставить флаг что данные готовы к отправке и парсить его в CAN таске на отправку данных
+  // Дано выставить флаг что данные готовы к отправке и парсить его в vMainAppTask на отправку данных
 }
 
 /***************************************************************************/

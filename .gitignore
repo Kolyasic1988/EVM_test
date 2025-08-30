@@ -69,3 +69,4 @@ rules.ninja
 *.log
 *.lst
 *.dmp
+*.ioc

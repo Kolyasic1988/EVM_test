@@ -9,11 +9,13 @@
 
 #include "adc.h"
 #include "can.h"
-#include "module_ntc_termistor.h"
 
 // очередь для данных АЦП
 #define ADC_QUEUE_LENGTH        (10u)
 #define ADC_QUEUE_ITEM_SIZE     sizeof(adc_data_t)
+
+//таймер для запуска преобразования АЦП
+#define ADC_TIMER_PERIOD_TICKS (pdMS_TO_TICKS(100)) // 100 мс - 10Гц
 
 // Макрос для ожидания поднятия CAN
 #define WAIT_CAN_UP() \

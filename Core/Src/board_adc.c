@@ -13,12 +13,56 @@
 #include "board_var.h"
 #include "board_def.h"
 #include "queue.h"
+#include "timers.h"
+#include "module_ntc_termistor.h"
 
 static QueueHandle_t xAdcQueue;
 static StaticQueue_t xAdcQueueStruct;
 static uint8_t ucAdcQueueStorage[ADC_QUEUE_LENGTH * ADC_QUEUE_ITEM_SIZE];
 
-// Внутренняя функция для инициализации статической очереди
+static TimerHandle_t xAdcTimer;
+static StaticTimer_t xAdcTimerStruct;
+
+/***************************************************************************/
+/**
+ *  @brief  Callback функция таймера для запуска преобразования АЦП
+ */
+static void vAdcTimerCallback(TimerHandle_t xTimer)
+{
+    HAL_ADC_Start_IT(&hadc1);
+}
+
+/***************************************************************************/
+/**
+ *  @brief  Запуск таймера для АЦП
+ */
+void vStartAdcTimer(void)
+{
+    if (xAdcTimer != NULL) { xTimerStart(xAdcTimer, 0); }
+}
+
+/***************************************************************************/
+/**
+ *  @brief  Инициализация таймера для АЦП
+ */
+static void vInitAdcTimer(void)
+{
+    xAdcTimer = xTimerCreateStatic(
+        "AdcTmr",
+        ADC_TIMER_PERIOD_TICKS,
+        pdTRUE, // автоперезапуск
+        NULL,
+        vAdcTimerCallback,
+        &xAdcTimerStruct
+    );
+    configASSERT(xAdcTimer != NULL);
+    // Не стартуем таймер сразу
+}
+
+/***************************************************************************/
+/**
+ *  @brief  Инициализация очереди АЦП
+ */
 static void vInitAdcQueue(void)
 {
     xAdcQueue = xQueueCreateStatic(
@@ -37,6 +81,7 @@ static void vInitAdcQueue(void)
 void vInitAdcTask(void)
 {
     vInitAdcQueue();
+    vInitAdcTimer();
 
     xTaskCreateStatic(
         vAdcTask,                     // Функция таски

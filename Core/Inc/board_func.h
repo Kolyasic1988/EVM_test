@@ -13,13 +13,15 @@ extern void vInitUserTasks(void);
 extern void vInitMainAppTask(void);
 extern void vInitAdcTask(void);
 
-
-// Функции таско
+// Функции задач
 extern void vMainAppTask(void *pvArg);
 extern void vAdcTask(void *pvArg);
 
 // Функции обработчики
 extern void vRunHandlers(void);
 extern void vAdcCheckParameters(void);
+
+// Функция запуска таймера АЦП
+extern void vStartAdcTimer(void);
 
 #endif /*__BOARD_FUNC_H */
