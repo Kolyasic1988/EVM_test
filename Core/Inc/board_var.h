@@ -4,8 +4,8 @@
  = File name:                    board_var.h
  ====================================================================
  */
-#ifndef __board_var_H
-#define __board_var_H
+#ifndef __BOARD_VAR_H
+#define __BOARD_VAR_H
 
 #include "FreeRTOS.h"
 
@@ -17,4 +17,4 @@ extern StaticTask_t xMainAppTaskTCB;
 extern StackType_t xAdcTaskStack[configMINIMAL_STACK_SIZE];
 extern StaticTask_t xAdcTaskTCB;
 
-#endif /*__ board_var_H */
+#endif /*__BOARD_VAR_H */

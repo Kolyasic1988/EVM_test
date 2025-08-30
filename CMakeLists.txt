@@ -53,7 +53,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     Core/Src/board_func.c
     Core/Src/board_var.c
     Core/Src/board_adc.c
-    Core/Src/module_termistor.c
+    Core/Src/module_ntc_termistor.c
 )
 
 # Add include paths

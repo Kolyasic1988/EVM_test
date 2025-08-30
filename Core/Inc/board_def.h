@@ -4,11 +4,21 @@
  = File name:                    board_def.h
  ====================================================================
  */
-#ifndef __board_def_H
-#define __board_def_H
+#ifndef __BOARD_DEF_H
+#define __BOARD_DEF_H
 
-// АЦП
+#include "adc.h"
+#include "can.h"
+#include "module_ntc_termistor.h"
+
+// очередь для данных АЦП
 #define ADC_QUEUE_LENGTH        (10u)
-#define ADC_QUEUE_ITEM_SIZE     sizeof(adc_data_t) 
+#define ADC_QUEUE_ITEM_SIZE     sizeof(adc_data_t)
 
-#endif /*__ board_def_H */
+// Макрос для ожидания поднятия CAN
+#define WAIT_CAN_UP() \
+    do { \
+      vTaskDelay(pdMS_TO_TICKS(1)); /* Просто ждем */ \
+    } while((HAL_CAN_GetState(&hcan1) != HAL_CAN_STATE_READY));
+    
+#endif /*__BOARD_DEF_H */

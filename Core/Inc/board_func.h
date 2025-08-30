@@ -4,8 +4,8 @@
  = File name:                    board_func.h
  ====================================================================
  */
-#ifndef __board_func_H
-#define __board_func_H
+#ifndef __BOARD_FUNC_H
+#define __BOARD_FUNC_H
 
 // Функции инициализации
 extern void vInitUser(void);
@@ -22,4 +22,4 @@ extern void vAdcTask(void *pvArg);
 extern void vRunHandlers(void);
 extern void vAdcCheckParameters(void);
 
-#endif /*__ board_func_H */
+#endif /*__BOARD_FUNC_H */

@@ -12,21 +12,31 @@
 #include "board_func.h"
 #include "board_var.h"
 #include "board_def.h"
-#include "adc.h"
-#include "module_termistor.h"
 #include "queue.h"
 
 static QueueHandle_t xAdcQueue;
+static StaticQueue_t xAdcQueueStruct;
+static uint8_t ucAdcQueueStorage[ADC_QUEUE_LENGTH * ADC_QUEUE_ITEM_SIZE];
+
+// Внутренняя функция для инициализации статической очереди
+static void vInitAdcQueue(void)
+{
+    xAdcQueue = xQueueCreateStatic(
+        ADC_QUEUE_LENGTH,
+        ADC_QUEUE_ITEM_SIZE,
+        ucAdcQueueStorage,
+        &xAdcQueueStruct
+    );
+    configASSERT(xAdcQueue != NULL);
+}
 
 /***************************************************************************/
 /**
- *  @brief  Инициализация задачи АЦП
+ *  @brief  Инициализация задачи АЦП и примитивов синхронизации
  */
 void vInitAdcTask(void)
 {
-    // Создаём очередь для adc_data_t
-    xAdcQueue = xQueueCreate(ADC_QUEUE_LENGTH, ADC_QUEUE_ITEM_SIZE);
-    configASSERT(xAdcQueue != NULL);
+    vInitAdcQueue();
 
     xTaskCreateStatic(
         vAdcTask,                     // Функция таски
@@ -53,8 +63,7 @@ void vAdcTask(void *pvArg) {
     for(;;) {
         // Ждём данные из очереди
         if (xQueueReceive(xAdcQueue, &adc_data, portMAX_DELAY) == pdPASS) {
-          // Обработка данных с АЦП (вызов функции обработки термисторов)
-          vCalculateTermistorTemp(&adc_data);
+          vCalculateTermistorTemp(adc_data);
         }
     }
 }
@@ -68,9 +77,9 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
 {
     if (hadc == &hadc1) {
         adc_data_t adc_data = {{0, 0}};
-        // Считываем два значения подряд (для двух каналов в последовательности)
-        adc_data.buf[ADC_CH0] = HAL_ADC_GetValue(hadc); // Нулевой канал
-        adc_data.buf[ADC_CH1] = HAL_ADC_GetValue(hadc); // Первй канал
+        // Считываем два значения подряд
+        adc_data.buf[NTC_SENSOR_1] = HAL_ADC_GetValue(hadc);
+        adc_data.buf[NTC_SENSOR_2] = HAL_ADC_GetValue(hadc);
         xQueueSendFromISR(xAdcQueue, &adc_data, NULL);
     }
 }
@@ -82,7 +91,6 @@ void vAdcCheckParameters(void) {
     // првоеряем полученные значения с АЦП
     // если они после расчетов выходят за допустимые пределы
     // выставляем флаги ошибок термисторов
-    vCheckTermistorTemp();
 }
 
 
