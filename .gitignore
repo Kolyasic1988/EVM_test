@@ -70,3 +70,6 @@ rules.ninja
 *.lst
 *.dmp
 *.ioc
+
+.vscode/
+compile_commands.json
