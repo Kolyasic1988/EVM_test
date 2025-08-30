@@ -61,6 +61,10 @@ rules.ninja
 .project
 .settings/
 
+# --- Общие библиотеки ---
+/Drivers/
+/Middlewares/
+
 # --- Прочее ---
 *.log
 *.lst
