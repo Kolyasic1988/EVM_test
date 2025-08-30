@@ -12,6 +12,7 @@ extern void vInitUser(void);
 extern void vInitUserTasks(void);
 extern void vInitMainAppTask(void);
 extern void vInitAdcTask(void);
+extern void vInitCanQueue(void);
 
 // Функции задач
 extern void vMainAppTask(void *pvArg);

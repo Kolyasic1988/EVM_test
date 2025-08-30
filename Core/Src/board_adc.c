@@ -6,14 +6,11 @@
  */
 
 #include "stm32f4xx_hal.h"
-#include "stm32f4xx_it.h"
 #include "FreeRTOS.h"
 #include "cmsis_os.h"
 #include "board_func.h"
 #include "board_var.h"
 #include "board_def.h"
-#include "queue.h"
-#include "timers.h"
 #include "module_ntc_termistor.h"
 
 static QueueHandle_t xAdcQueue;
@@ -27,7 +24,7 @@ static StaticTimer_t xAdcTimerStruct;
 /**
  *  @brief  Callback функция таймера для запуска преобразования АЦП
  */
-static void vAdcTimerCallback(TimerHandle_t xTimer)
+static void vAdcTimerCallback(void)
 {
     HAL_ADC_Start_IT(&hadc1);
 }
@@ -52,7 +49,7 @@ static void vInitAdcTimer(void)
         ADC_TIMER_PERIOD_TICKS,
         pdTRUE, // автоперезапуск
         NULL,
-        vAdcTimerCallback,
+        (TimerCallbackFunction_t)vAdcTimerCallback,
         &xAdcTimerStruct
     );
     configASSERT(xAdcTimer != NULL);
@@ -80,9 +77,6 @@ static void vInitAdcQueue(void)
  */
 void vInitAdcTask(void)
 {
-    vInitAdcQueue();
-    vInitAdcTimer();
-
     xTaskCreateStatic(
         vAdcTask,                     // Функция таски
         "AdcTask",                    // Имя таски
@@ -101,14 +95,20 @@ void vInitAdcTask(void)
  */
 void vAdcTask(void *pvArg) {
     (void)(pvArg);
+    vInitAdcQueue();
+    vInitAdcTimer();
     //Запускаем АЦП в режиме непрерывного сканирования
     HAL_ADC_Start_IT(&hadc1);
-
-    adc_data_t adc_data = { {0, 0}};
+    AdcData_t adc_data = { {0, 0}};
+    QueueTemp_t queue_temps[NTC_SENSOR_COUNT] = {{MSG_TYPE_NTC_SENSOR_1, 0.0},
+                                                 {MSG_TYPE_NTC_SENSOR_2, 0.0}};
     for(;;) {
         // Ждём данные из очереди
         if (xQueueReceive(xAdcQueue, &adc_data, portMAX_DELAY) == pdPASS) {
-          vCalculateTermistorTemp(adc_data);
+            queue_temps[NTC_SENSOR_1].temp = fProcessTermistor(adc_data.buf[NTC_SENSOR_1], NTC_SENSOR_1);
+            queue_temps[NTC_SENSOR_2].temp = fProcessTermistor(adc_data.buf[NTC_SENSOR_2],NTC_SENSOR_2);
+            xQueueSend(xCanTempQueue, &queue_temps[NTC_SENSOR_1], portMAX_DELAY);
+            xQueueSend(xCanTempQueue, &queue_temps[NTC_SENSOR_1], portMAX_DELAY);
         }
     }
 }
@@ -121,7 +121,7 @@ void vAdcTask(void *pvArg) {
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
 {
     if (hadc == &hadc1) {
-        adc_data_t adc_data = {{0, 0}};
+        AdcData_t adc_data = {{0, 0}};
         // Считываем два значения подряд
         adc_data.buf[NTC_SENSOR_1] = HAL_ADC_GetValue(hadc);
         adc_data.buf[NTC_SENSOR_2] = HAL_ADC_GetValue(hadc);
@@ -137,6 +137,3 @@ void vAdcCheckParameters(void) {
     // если они после расчетов выходят за допустимые пределы
     // выставляем флаги ошибок термисторов
 }
-
-
-

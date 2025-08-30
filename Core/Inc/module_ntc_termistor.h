@@ -9,9 +9,6 @@
 
 #include <stdint.h>
 
-#define DIVIDER_RESISTANCE  (3300.0)
-#define VOLTAGE_SUPPLY      (5.0)
-
 // --- NTC термистор параметры на основе таблицы ---
 // { -40, 402000.0f },
 // { -30, 200000.0f },
@@ -43,18 +40,22 @@
 #define NTC_TEMP_MIN   (-40.0f)
 #define NTC_TEMP_MAX   (125.0f)
 
+// Параметры делителя напряжения для подключения термисторов
+#define DIVIDER_RESISTANCE  (3300.0)
+#define VOLTAGE_SUPPLY      (5.0)
+
 typedef enum {
-  NTC_SENSOR_1 = 0,
-  NTC_SENSOR_2 = 1,
-  NTC_SENSOR_COUNT = 2
+    NTC_SENSOR_1     = 0,
+    NTC_SENSOR_2     = 1,
+    NTC_SENSOR_COUNT = 2
 } NTCSensorNames_e;
 
 typedef struct {
-  uint16_t buf[NTC_SENSOR_COUNT];
-} adc_data_t;
+    uint16_t buf[NTC_SENSOR_COUNT];
+} AdcData_t;
 
-extern float temp_buf[NTC_SENSOR_COUNT];
+// Массив для хранения текущих температур с термисторов
 
-extern void vCalculateTermistorTemp(adc_data_t adc_data);
-extern int vCheckTermistorTemp(float temp_buf);
+extern float fProcessTermistor(uint16_t adc_value, NTCSensorNames_e sensor);
+extern uint32_t getErrorCount(NTCSensorNames_e sensor);
 #endif /*__MODULE_NTC_TERMISTOR_H */

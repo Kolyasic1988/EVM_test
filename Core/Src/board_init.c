@@ -5,11 +5,10 @@
  ====================================================================
  */
 
+#include "FreeRTOS.h"
+#include "cmsis_os.h"
 #include "board_func.h"
 #include "board_var.h"
-#include "cmsis_os.h"
-#include "FreeRTOS.h"
-#include "task.h"
 
 /********************************************************************/
 /**
@@ -32,7 +31,7 @@
 void vInitUser(void)
 {
     //Может инициализировать какие структуры данных?
-
+    //xState какая нибудь
 }
 
 void vInitUserTasks(void)
@@ -40,4 +39,3 @@ void vInitUserTasks(void)
     vInitMainAppTask();
     vInitAdcTask();
 }
-
