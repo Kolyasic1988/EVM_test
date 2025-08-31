@@ -1,11 +1,11 @@
 /*
  ====================================================================
- = Description:                  Прототипы функций для работы с NTC термисторами
- = File name:                    module_ntc_termistor.h
+ = Description:                  Константы и опредедения для работы с NTC термисторами
+ = File name:                    module_ntc_termistor_def.h
  ====================================================================
  */
-#ifndef __MODULE_NTC_TERMISTOR_H
-#define __MODULE_NTC_TERMISTOR_H
+#ifndef __MODULE_NTC_TERMISTOR_DEF_H
+#define __MODULE_NTC_TERMISTOR_DEF_H
 
 #include <stdint.h>
 
@@ -37,8 +37,8 @@
 #define NTC_T0              (25.0)        // T0 (°C)
 #define NTC_T0_KELVIN       (NTC_T0 + 273.15)
 
-#define NTC_TEMP_MIN   (-40.0f)
-#define NTC_TEMP_MAX   (125.0f)
+#define NTC_TEMP_MIN        (-40.0f)
+#define NTC_TEMP_MAX        (125.0f)
 
 // Параметры делителя напряжения для подключения термисторов
 #define DIVIDER_RESISTANCE  (3300.0)
@@ -51,11 +51,29 @@ typedef enum {
 } NTCSensorNames_e;
 
 typedef struct {
+    float ref_voltage;
+    uint16_t max_val;
+} AdcThermistorParam_t;
+
+typedef struct {
+    float b_coefficient;      // B (K)
+    float r0;                 // R0 (Ом) при T0
+    float t0;                 // T0 (°C)
+    float t0_kelvin;          // T0 (K)
+    float divider_resistance; // Ом
+    float voltage_supply;     // Вольт
+    float temp_min;           // min °C
+    float temp_max;           // max °C
+} NtcThermistorParam_t;
+
+typedef struct {
+    AdcThermistorParam_t adc;
+    NtcThermistorParam_t params;
+    uint32_t error_count[NTC_SENSOR_COUNT];
+} NtcThermostor_t;
+
+typedef struct {
     uint16_t buf[NTC_SENSOR_COUNT];
 } AdcData_t;
 
-// Массив для хранения текущих температур с термисторов
-
-extern float fProcessTermistor(uint16_t adc_value, NTCSensorNames_e sensor);
-extern uint32_t getErrorCount(NTCSensorNames_e sensor);
-#endif /*__MODULE_NTC_TERMISTOR_H */
+#endif /*__MODULE_NTC_TERMISTOR_DEF_H */

@@ -40,6 +40,10 @@ add_executable(${CMAKE_PROJECT_NAME})
 # Add STM32CubeMX generated sources
 add_subdirectory(cmake/stm32cubemx)
 
+# Подключение библиотеки ntc_termistor
+add_subdirectory(Libs/ntc_termistor)
+
+
 # Link directories setup
 target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined library search paths
@@ -53,7 +57,6 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     Core/Src/board_func.c
     Core/Src/board_var.c
     Core/Src/board_adc.c
-    Core/Src/module_ntc_termistor.c
 )
 
 # Add include paths
@@ -69,6 +72,6 @@ target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE
 # Add linked libraries
 target_link_libraries(${CMAKE_PROJECT_NAME}
     stm32cubemx
-
     # Add user defined libraries
+    ntc_termistor
 )

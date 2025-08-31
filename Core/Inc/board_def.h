@@ -9,9 +9,10 @@
 
 #include "adc.h"
 #include "can.h"
+#include "ntc_termistor_def.h"
 #include <string.h>
 #include <stdint.h>
-/*======================ADC===========================*/
+/*====================== ADC ===========================*/
 
 // очередь для данных АЦП
 #define ADC_QUEUE_LENGTH        (10u)
@@ -20,7 +21,7 @@
 //таймер для запуска преобразования АЦП
 #define ADC_TIMER_PERIOD_TICKS  (pdMS_TO_TICKS(100u)) // 100 мс - 10Гц
 
-/*======================CAN===========================*/
+/*====================== CAN ===========================*/
 
 // Адрес устройства на шине CAN
 #define SELF_CAN_ADDRESS          (42u)

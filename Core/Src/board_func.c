@@ -9,7 +9,7 @@
 #include "board_func.h"
 #include "board_def.h"
 #include "board_var.h"
-#include "module_ntc_termistor.h"
+#include "ntc_termistor_def.h"
 
 static QueueTemp_t sensorTemp;
 /***************************************************************************/

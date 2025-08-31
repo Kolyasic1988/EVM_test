@@ -1,20 +1,41 @@
 /*
  ====================================================================
  = Description:                  Функции для работы с NTC термисторами
- = File name:                    module_ntc_termistor.c
+ = File name:                    ntc_termistor.c
  ====================================================================
  */
-#include "module_ntc_termistor.h"
-#include "board_func.h"
-#include "adc.h"
+#include "ntc_termistor_func.h"
+#include "ntc_termistor_def.h"
+//#include "board_func.h"
+//#include "adc.h"
 #include <math.h>
 #include <stdint.h>
 #include <stdbool.h>
 
-static uint32_t ntc_error_flag[NTC_SENSOR_COUNT];
+/***************************************************************************/
+/**
+  * @brief  Структура с параметрами по умолчанию для инициализации
+  */
+static NtcThermostor_t ntc_sensor = {
+    .adc = {
+        .ref_voltage = 3.3,
+        .max_val = 4095
+    },
+    .params = {
+        .b_coefficient = NTC_B_COEFFICIENT,
+        .r0 = NTC_R0,
+        .t0_kelvin = NTC_T0_KELVIN,
+        .temp_min = NTC_TEMP_MIN,
+        .temp_max = NTC_TEMP_MAX,
+        .divider_resistance = DIVIDER_RESISTANCE,
+        .voltage_supply = VOLTAGE_SUPPLY
+    },
+    .error_count = {0, 0}
+};
 
 static bool isTempOk(float temp_buf);
 static float fCalculateNTCTemperature(uint16_t adc_value);
+
 /***************************************************************************/
 /**
   * @brief Обработка температуры с термисторов
@@ -25,7 +46,7 @@ float fProcessTermistor(uint16_t adc_value, NTCSensorNames_e sensor) {
         return 0.0f;
     }
     float temp = fCalculateNTCTemperature(adc_value);
-    ntc_error_flag[sensor] += isTempOk(temp) ? 0 : 1;
+    ntc_sensor.error_count[sensor] += isTempOk(temp) ? 0 : 1;
     return temp;
 }
 
@@ -38,11 +59,11 @@ float fProcessTermistor(uint16_t adc_value, NTCSensorNames_e sensor) {
  */
 static float fCalculateNTCTemperature(uint16_t adc_value) {
     // Преобразование значения АЦП в напряжение
-    float v_adc = ((float) adc_value / ADC_MAX_VAL) * ADC_REF_VOLTAGE;
+    float v_adc = ((float) adc_value / ntc_sensor.adc.ref_voltage) * ntc_sensor.adc.max_val;
     // Расчёт сопротивления термистора (NTC в нижнем плече делителя)
-    float r_ntc = (DIVIDER_RESISTANCE * v_adc) / (VOLTAGE_SUPPLY - v_adc);
+    float r_ntc = (ntc_sensor.params.divider_resistance * v_adc) / (ntc_sensor.params.voltage_supply - v_adc);
     // Расчёт температуры по B-формуле
-    float temp_k = 1.0 / ((1.0 / (NTC_T0_KELVIN)) + (1.0 / NTC_B_COEFFICIENT) * logf(r_ntc / NTC_R0));
+    float temp_k = 1.0 / ((1.0 / (ntc_sensor.params.t0_kelvin)) + (1.0 / ntc_sensor.params.b_coefficient) * logf(r_ntc / ntc_sensor.params.r0));
     return temp_k - 273.15;
 }
 
@@ -51,7 +72,7 @@ static float fCalculateNTCTemperature(uint16_t adc_value) {
   * @brief  Проверка показаний термисторов
   */
 static bool isTempOk(float temp_buf) {
-    if (temp_buf < NTC_TEMP_MIN || temp_buf > NTC_TEMP_MAX) {
+    if (temp_buf < ntc_sensor.params.temp_min || temp_buf > ntc_sensor.params.temp_max) {
         return false;
     }
     return true;
@@ -61,10 +82,18 @@ static bool isTempOk(float temp_buf) {
 /**
   * @brief  Получение количества ошибок по термистору
   */
-uint32_t getErrorCount(NTCSensorNames_e sensor) {
+uint32_t ucNtcErrorCount(NTCSensorNames_e sensor) {
     if (sensor >= NTC_SENSOR_COUNT) {
         return 0;
     }
-    return ntc_error_flag[sensor];
+    return ntc_sensor.error_count[sensor];
 }
-  
+
+/***************************************************************************/
+/**
+  * @brief  Инициализация модуля - получение параметров АЦП
+  */
+void ntc_termistor_init(float ref_voltage, uint16_t max_val) {
+    ntc_sensor.adc.ref_voltage = ref_voltage;
+    ntc_sensor.adc.max_val = max_val;
+}

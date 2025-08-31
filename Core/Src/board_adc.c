@@ -11,7 +11,7 @@
 #include "board_func.h"
 #include "board_var.h"
 #include "board_def.h"
-#include "module_ntc_termistor.h"
+#include "ntc_termistor_func.h"
 
 static QueueHandle_t xAdcQueue;
 static StaticQueue_t xAdcQueueStruct;
