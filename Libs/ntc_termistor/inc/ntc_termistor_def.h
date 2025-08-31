@@ -45,9 +45,9 @@
 #define VOLTAGE_SUPPLY      (5.0)
 
 typedef enum {
-    NTC_SENSOR_1     = 0,
-    NTC_SENSOR_2     = 1,
-    NTC_SENSOR_COUNT = 2
+    NTC_SENS1      = 0,
+    NTC_SENS2      = 1,
+    NTC_SENS_COUNT = 2
 } NTCSensorNames_e;
 
 typedef struct {
@@ -69,11 +69,11 @@ typedef struct {
 typedef struct {
     AdcThermistorParam_t adc;
     NtcThermistorParam_t params;
-    uint32_t error_count[NTC_SENSOR_COUNT];
+    uint32_t error_count[NTC_SENS_COUNT];
 } NtcThermostor_t;
 
 typedef struct {
-    uint16_t buf[NTC_SENSOR_COUNT];
+    uint16_t buf[NTC_SENS_COUNT];
 } AdcData_t;
 
 #endif /*__MODULE_NTC_TERMISTOR_DEF_H */

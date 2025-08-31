@@ -17,9 +17,8 @@
   */
 void vInitUser(void)
 {
+    vInitxState();
     ntc_termistor_init(ADC_REF_VOLTAGE, ADC_MAX_VAL);
-    // Может инициализировать какие структуры данных?
-    // xState какая нибудь
 }
 
 /********************************************************************/

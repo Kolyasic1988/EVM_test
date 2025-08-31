@@ -12,6 +12,20 @@
 #include "ntc_termistor_def.h"
 #include <string.h>
 #include <stdint.h>
+
+/*====================== Device ===========================*/
+typedef enum {
+    ERROR_NONE        = 0,
+    ERROR_NTC_SENSOR  = 1,
+    ERROR_CAN         = 2,
+} ErrorCode_e;
+
+typedef struct {
+    uint32_t        ulUptime;
+    ErrorCode_e     eDevError;
+    float           fTemp[NTC_SENS_COUNT];
+} DeviceState_t;
+
 /*====================== ADC ===========================*/
 
 // очередь для данных АЦП

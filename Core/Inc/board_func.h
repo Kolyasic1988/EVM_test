@@ -1,3 +1,4 @@
+
 /*
  ====================================================================
  = Description:                  Прототипы функций проекта
@@ -7,22 +8,21 @@
 #ifndef __BOARD_FUNC_H
 #define __BOARD_FUNC_H
 
-// Функции инициализации
+#include "board_def.h"
+
 extern void vInitUser(void);
+extern void vInitxState(void);
 extern void vInitUserTasks(void);
 extern void vInitMainAppTask(void);
 extern void vInitAdcTask(void);
 extern void vInitCanQueue(void);
 
-// Функции задач
 extern void vMainAppTask(void *pvArg);
 extern void vAdcTask(void *pvArg);
 
-// Функции обработчики
 extern void vRunHandlers(void);
 extern void vAdcCheckParameters(void);
 
-// Функция запуска таймера АЦП
 extern void vStartAdcTimer(void);
 
 #endif /*__BOARD_FUNC_H */

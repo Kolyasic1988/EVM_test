@@ -12,6 +12,21 @@
 #include "ntc_termistor_def.h"
 
 static QueueTemp_t sensorTemp;
+
+/***************************************************************************/
+/**
+ *  @brief  Инициализация xState
+ * @brief  Установка кода ошибки
+ */
+void vInitxState(void) {
+    taskENTER_CRITICAL();
+    xState.ulUptime = HAL_GetTick();
+    xState.eDevError = ERROR_NONE;
+    xState.fTemp[NTC_SENS1] = 0.0f;
+    xState.fTemp[NTC_SENS2] = 0.0f;
+    taskEXIT_CRITICAL();
+}
+
 /***************************************************************************/
 /**
   * @brief  Формирует CAN пакет по пользовательским данным
@@ -39,12 +54,12 @@ static void vSendDataToCan(CAN_HandleTypeDef *hcan, uint8_t type, const void *da
     txHeader.TransmitGlobalTime = DISABLE;
 
     HAL_StatusTypeDef status = HAL_CAN_AddTxMessage(hcan, &txHeader, (uint8_t*)&txData, &txMailbox);
-    if (status != HAL_OK) {
-        // Ошибка отправки
-        // Можно обработать ошибку здесь, например, записать в лог или установить флаг ошибки
-        // Для простоты примера просто возвращаемся
-        return;
-    }
+        if (status != HAL_OK) {
+            taskENTER_CRITICAL();
+            xState.eDevError = ERROR_CAN;
+            taskEXIT_CRITICAL();
+            return;
+        }
 }
 
 /***************************************************************************/

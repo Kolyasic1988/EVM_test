@@ -100,15 +100,23 @@ void vAdcTask(void *pvArg) {
     //Запускаем АЦП в режиме непрерывного сканирования
     HAL_ADC_Start_IT(&hadc1);
     AdcData_t adc_data = { {0, 0}};
-    QueueTemp_t queue_temps[NTC_SENSOR_COUNT] = {{MSG_TYPE_NTC_SENSOR_1, 0.0},
+    QueueTemp_t queue_temps[NTC_SENS_COUNT] = {{MSG_TYPE_NTC_SENSOR_1, 0.0},
                                                  {MSG_TYPE_NTC_SENSOR_2, 0.0}};
     for(;;) {
         // Ждём данные из очереди
         if (xQueueReceive(xAdcQueue, &adc_data, portMAX_DELAY) == pdPASS) {
-            queue_temps[NTC_SENSOR_1].temp = fProcessTermistor(adc_data.buf[NTC_SENSOR_1], NTC_SENSOR_1);
-            queue_temps[NTC_SENSOR_2].temp = fProcessTermistor(adc_data.buf[NTC_SENSOR_2],NTC_SENSOR_2);
-            xQueueSend(xCanTempQueue, &queue_temps[NTC_SENSOR_1], portMAX_DELAY);
-            xQueueSend(xCanTempQueue, &queue_temps[NTC_SENSOR_1], portMAX_DELAY);
+            queue_temps[NTC_SENS1].temp = fProcessTermistor(adc_data.buf[NTC_SENS1], NTC_SENS1);
+            queue_temps[NTC_SENS2].temp = fProcessTermistor(adc_data.buf[NTC_SENS2], NTC_SENS2);
+            xQueueSend(xCanTempQueue, &queue_temps[NTC_SENS1], portMAX_DELAY);
+            xQueueSend(xCanTempQueue, &queue_temps[NTC_SENS1], portMAX_DELAY);
+    
+            taskENTER_CRITICAL();
+            xState.fTemp[NTC_SENS1] = queue_temps[NTC_SENS1].temp;
+            xState.fTemp[NTC_SENS2] = queue_temps[NTC_SENS2].temp;
+            if (ucNtcErrorCount(NTC_SENS1) > 0 || ucNtcErrorCount(NTC_SENS2) > 0) {
+                xState.eDevError = ERROR_NTC_SENSOR;
+            }
+            taskEXIT_CRITICAL();
         }
     }
 }
@@ -123,8 +131,8 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
     if (hadc == &hadc1) {
         AdcData_t adc_data = {{0, 0}};
         // Считываем два значения подряд
-        adc_data.buf[NTC_SENSOR_1] = HAL_ADC_GetValue(hadc);
-        adc_data.buf[NTC_SENSOR_2] = HAL_ADC_GetValue(hadc);
+        adc_data.buf[NTC_SENS1] = HAL_ADC_GetValue(hadc);
+        adc_data.buf[NTC_SENS2] = HAL_ADC_GetValue(hadc);
         xQueueSendFromISR(xAdcQueue, &adc_data, NULL);
     }
 }

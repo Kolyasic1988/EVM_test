@@ -11,6 +11,8 @@
 #include "cmsis_os.h"
 #include "board_def.h"
 
+extern DeviceState_t xState;
+
 extern StackType_t xMainAppTaskStack[configMINIMAL_STACK_SIZE];
 extern StaticTask_t xMainAppTaskTCB;
 

@@ -5,6 +5,8 @@
  ====================================================================
  */
 #include "board_var.h"
+// --- Структура состояния устройства ---
+DeviceState_t xState;
 
 // --- Статические ресурсы для главное задачи ---
 StackType_t xMainAppTaskStack[configMINIMAL_STACK_SIZE];

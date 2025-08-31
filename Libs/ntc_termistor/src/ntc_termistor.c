@@ -42,7 +42,7 @@ static float fCalculateNTCTemperature(uint16_t adc_value);
   * 
   */
 float fProcessTermistor(uint16_t adc_value, NTCSensorNames_e sensor) {
-    if (sensor >= NTC_SENSOR_COUNT) {
+    if (sensor >= NTC_SENS_COUNT) {
         return 0.0f;
     }
     float temp = fCalculateNTCTemperature(adc_value);
@@ -83,7 +83,7 @@ static bool isTempOk(float temp_buf) {
   * @brief  Получение количества ошибок по термистору
   */
 uint32_t ucNtcErrorCount(NTCSensorNames_e sensor) {
-    if (sensor >= NTC_SENSOR_COUNT) {
+    if (sensor >= NTC_SENS_COUNT) {
         return 0;
     }
     return ntc_sensor.error_count[sensor];
