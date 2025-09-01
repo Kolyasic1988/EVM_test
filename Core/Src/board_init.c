@@ -18,7 +18,7 @@
 void vInitUser(void)
 {
     vInitxState();
-    ntc_termistor_init(ADC_REF_VOLTAGE, ADC_MAX_VAL);
+    vNtcTermistorInit(ADC_REF_VOLTAGE, ADC_MAX_VAL);
 }
 
 /********************************************************************/

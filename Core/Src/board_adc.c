@@ -53,7 +53,6 @@ static void vInitAdcTimer(void)
         &xAdcTimerStruct
     );
     configASSERT(xAdcTimer != NULL);
-    // Не стартуем таймер сразу
 }
 
 /***************************************************************************/

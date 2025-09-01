@@ -10,7 +10,7 @@
 #include <stdint.h>
 #include "ntc_termistor_def.h"
 
-extern void ntc_termistor_init(float ref_voltage, uint16_t max_val);
+extern void vNtcTermistorInit(float ref_voltage, uint16_t max_val);
 
 extern float fProcessTermistor(uint16_t adc_value, NTCSensorNames_e sensor);
 extern uint32_t ucNtcErrorCount(NTCSensorNames_e sensor);

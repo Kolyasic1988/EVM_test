@@ -6,8 +6,6 @@
  */
 #include "ntc_termistor_func.h"
 #include "ntc_termistor_def.h"
-//#include "board_func.h"
-//#include "adc.h"
 #include <math.h>
 #include <stdint.h>
 #include <stdbool.h>
@@ -93,7 +91,7 @@ uint32_t ucNtcErrorCount(NTCSensorNames_e sensor) {
 /**
   * @brief  Инициализация модуля - получение параметров АЦП
   */
-void ntc_termistor_init(float ref_voltage, uint16_t max_val) {
+void vNtcTermistorInit(float ref_voltage, uint16_t max_val) {
     ntc_sensor.adc.ref_voltage = ref_voltage;
     ntc_sensor.adc.max_val = max_val;
 }
